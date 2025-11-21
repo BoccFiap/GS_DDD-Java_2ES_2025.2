@@ -11,7 +11,7 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
-@RequestMapping("/ponteia")
+@RequestMapping("/ponteia")  // Tudo continua em /ponteia
 public class PortfolioController {
 
     private final PortfolioService service;
@@ -20,6 +20,13 @@ public class PortfolioController {
         this.service = service;
     }
 
+    // ========== RAIZ DO SITE (FUNCIONA NO RENDER.COM) ==========
+    @GetMapping("/")
+    public String raiz() {
+        return "redirect:/ponteia";  // Redireciona a raiz para a home
+    }
+
+    // ========== HOME ==========
     @GetMapping
     public ModelAndView home() {
         return new ModelAndView("home-ponteia");
@@ -39,15 +46,11 @@ public class PortfolioController {
                                RedirectAttributes attr) {
 
         if (result.hasErrors()) {
-            // Volta para o formulário mantendo os dados e mostrando os erros
             return new ModelAndView("submeter-portfolio")
                     .addObject("portfolioDTO", dto);
         }
 
-        // Salva no banco
         service.salvar(new Portfolio(dto));
-
-        // Mensagem de sucesso
         attr.addFlashAttribute("sucesso",
                 "Portfólio enviado com sucesso! Você será notificado em até 48h sobre o Selo Ponte.IA");
 
