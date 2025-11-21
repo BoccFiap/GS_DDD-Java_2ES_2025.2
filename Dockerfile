@@ -1,16 +1,20 @@
-# Use the Eclipse temurin alpine official image
-# https://hub.docker.com/_/eclipse-temurin
-FROM eclipse-temurin:21-jdk-alpine
+# ===== STAGE 1: Build =====
+FROM eclipse-temurin:21-jdk AS builder
 
-# Create and change to the app directory.
 WORKDIR /app
 
-# Copy local code to the container image.
-COPY . ./
+COPY . .
 
-# Build the app.
 RUN chmod +x mvnw
-RUN ./mvnw -DoutputFile=target/mvn-dependency-list.log -B -DskipTests clean dependency:list install
+RUN ./mvnw clean package -DskipTests
 
-# Run the quarkus app 
-CMD ["sh", "-c", "java -jar target/drogaria-0.0.1-SNAPSHOT.jar"]
+# ===== STAGE 2: Run =====
+FROM eclipse-temurin:21-jre
+
+WORKDIR /app
+
+COPY --from=builder /app/target/*-SNAPSHOT.jar app.jar
+
+EXPOSE 8080
+
+ENTRYPOINT ["java", "-jar", "app.jar"]
