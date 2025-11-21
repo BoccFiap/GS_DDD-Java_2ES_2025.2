@@ -11,8 +11,7 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
-@RequestMapping("/ponteia")  // Tudo continua em /ponteia
-public class PortfolioController {
+public class PortfolioController {  // <--- REMOVI O /ponteia do @RequestMapping
 
     private final PortfolioService service;
 
@@ -20,27 +19,21 @@ public class PortfolioController {
         this.service = service;
     }
 
-    // ========== RAIZ DO SITE (FUNCIONA NO RENDER.COM) ==========
-    @GetMapping("/")
-    public String raiz() {
-        return "redirect:/ponteia";  // Redireciona a raiz para a home
-    }
-
-    // ========== HOME ==========
-    @GetMapping
+    // RAIZ DO SITE (AGORA FUNCIONA NO RENDER!)
+    @GetMapping({"/", "/ponteia"})
     public ModelAndView home() {
         return new ModelAndView("home-ponteia");
     }
 
     // ================== FORMULÁRIO DE SUBMISSÃO ==================
-    @GetMapping("/submeter")
+    @GetMapping("/ponteia/submeter")
     public ModelAndView formulario() {
         ModelAndView mv = new ModelAndView("submeter-portfolio");
         mv.addObject("portfolioDTO", new PortfolioDTO(null, null, null, null, null, null, null));
         return mv;
     }
 
-    @PostMapping("/submeter")
+    @PostMapping("/ponteia/submeter")
     public ModelAndView salvar(@Valid @ModelAttribute("portfolioDTO") PortfolioDTO dto,
                                BindingResult result,
                                RedirectAttributes attr) {
@@ -54,19 +47,18 @@ public class PortfolioController {
         attr.addFlashAttribute("sucesso",
                 "Portfólio enviado com sucesso! Você será notificado em até 48h sobre o Selo Ponte.IA");
 
-        return new ModelAndView("redirect:/ponteia");
+        return new ModelAndView("redir ect:/ponteia");
     }
 
     // ================== PAINEL ADMINISTRATIVO ==================
-    @GetMapping("/admin")
+    @GetMapping("/ponteia/admin")
     public ModelAndView admin() {
         ModelAndView mv = new ModelAndView("admin-listagem");
         mv.addObject("portfolios", service.listarTodos());
         return mv;
     }
 
-    // ================== EDITAR PORTFÓLIO ==================
-    @GetMapping("/admin/editar/{id}")
+    @GetMapping("/ponteia/admin/editar/{id}")
     public ModelAndView editar(@PathVariable Long id) {
         ModelAndView mv = new ModelAndView("admin-editar");
         Portfolio portfolio = service.buscarPorId(id);
@@ -77,11 +69,8 @@ public class PortfolioController {
         return mv;
     }
 
-    @PostMapping("/admin/editar/{id}")
-    public String atualizar(@PathVariable Long id,
-                            Portfolio portfolio,
-                            RedirectAttributes attr) {
-
+    @PostMapping("/ponteia/admin/editar/{id}")
+    public String atualizar(@PathVariable Long id, Portfolio portfolio, RedirectAttributes attr) {
         Portfolio existente = service.buscarPorId(id);
         if (existente != null) {
             existente.setStatus(portfolio.getStatus());
@@ -93,8 +82,7 @@ public class PortfolioController {
         return "redirect:/ponteia/admin";
     }
 
-    // ================== DELETAR PORTFÓLIO ==================
-    @GetMapping("/admin/deletar/{id}")
+    @GetMapping("/ponteia/admin/deletar/{id}")
     public String deletar(@PathVariable Long id, RedirectAttributes attr) {
         service.deletar(id);
         attr.addFlashAttribute("sucesso", "Portfólio excluído com sucesso!");
