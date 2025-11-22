@@ -11,7 +11,7 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
-public class PortfolioController {  // <--- REMOVI O /ponteia do @RequestMapping
+public class PortfolioController {
 
     private final PortfolioService service;
 
@@ -19,13 +19,13 @@ public class PortfolioController {  // <--- REMOVI O /ponteia do @RequestMapping
         this.service = service;
     }
 
-    // RAIZ DO SITE (AGORA FUNCIONA NO RENDER!)
+    // RAIZ E HOME - FUNCIONA EM / E /ponteia
     @GetMapping({"/", "/ponteia"})
-    public ModelAndView home() {
-        return new ModelAndView("home-ponteia");
+    public String home() {
+        return "home-ponteia";  // Thymeleaf entende como home-ponteia.html
     }
 
-    // ================== FORMULÁRIO DE SUBMISSÃO ==================
+    // FORMULÁRIO DE SUBMISSÃO
     @GetMapping("/ponteia/submeter")
     public ModelAndView formulario() {
         ModelAndView mv = new ModelAndView("submeter-portfolio");
@@ -33,24 +33,24 @@ public class PortfolioController {  // <--- REMOVI O /ponteia do @RequestMapping
         return mv;
     }
 
+    // ENVIO DO PORTFÓLIO - CORRIGIDO 100%
     @PostMapping("/ponteia/submeter")
-    public ModelAndView salvar(@Valid @ModelAttribute("portfolioDTO") PortfolioDTO dto,
-                               BindingResult result,
-                               RedirectAttributes attr) {
+    public String salvar(@Valid @ModelAttribute("portfolioDTO") PortfolioDTO dto,
+                         BindingResult result,
+                         RedirectAttributes attr) {
 
         if (result.hasErrors()) {
-            return new ModelAndView("submeter-portfolio")
-                    .addObject("portfolioDTO", dto);
+            return "submeter-portfolio"; // volta pro form com erros
         }
 
         service.salvar(new Portfolio(dto));
         attr.addFlashAttribute("sucesso",
                 "Portfólio enviado com sucesso! Você será notificado em até 48h sobre o Selo Ponte.IA");
 
-        return new ModelAndView("redir ect:/ponteia");
+        return "redirect:/ponteia"; // REDIRECIONAMENTO CORRETO (usando String simples)
     }
 
-    // ================== PAINEL ADMINISTRATIVO ==================
+    // PAINEL ADMINISTRATIVO
     @GetMapping("/ponteia/admin")
     public ModelAndView admin() {
         ModelAndView mv = new ModelAndView("admin-listagem");
@@ -58,6 +58,7 @@ public class PortfolioController {  // <--- REMOVI O /ponteia do @RequestMapping
         return mv;
     }
 
+    // EDITAR
     @GetMapping("/ponteia/admin/editar/{id}")
     public ModelAndView editar(@PathVariable Long id) {
         ModelAndView mv = new ModelAndView("admin-editar");
@@ -82,6 +83,7 @@ public class PortfolioController {  // <--- REMOVI O /ponteia do @RequestMapping
         return "redirect:/ponteia/admin";
     }
 
+    // DELETAR
     @GetMapping("/ponteia/admin/deletar/{id}")
     public String deletar(@PathVariable Long id, RedirectAttributes attr) {
         service.deletar(id);
