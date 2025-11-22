@@ -37,15 +37,15 @@
                 <td><span class="badge bg-warning text-dark" th:text="${p.status}"></span></td>
                 <td th:text="${#temporals.format(p.dataEnvio, 'dd/MM HH:mm')}"></td>
                 <td>
-                    <!-- Ver detalhes -->
+
                     <button class="btn btn-sm btn-primary me-1" data-bs-toggle="modal"
                             th:attr="data-bs-target='#modal' + ${p.id}">Ver</button>
 
-                    <!-- Editar -->
+
                     <a th:href="@{/ponteia/admin/editar/{id}(id=${p.id})}"
                        class="btn btn-sm btn-warning text-white me-1">Editar</a>
 
-                    <!-- Deletar com confirmação -->
+
                     <button class="btn btn-sm btn-danger" data-bs-toggle="modal"
                             th:attr="data-bs-target='#deleteModal' + ${p.id}">Deletar</button>
                 </td>
@@ -55,9 +55,9 @@
     </div>
 </div>
 
-<!-- Modal de Detalhes (mesmo de antes) + Modal de Delete para cada linha -->
+
 <div th:each="p : ${portfolios}">
-    <!-- Modal Detalhes -->
+
     <div class="modal fade" th:id="'modal' + ${p.id}">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
@@ -80,7 +80,7 @@
         </div>
     </div>
 
-    <!-- Modal Delete -->
+
     <div class="modal fade" th:id="'deleteModal' + ${p.id}">
         <div class="modal-dialog">
             <div class="modal-content">

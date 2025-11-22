@@ -22,7 +22,7 @@
     </properties>
 
     <dependencies>
-        <!-- suas dependencies que já estavam -->
+
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
@@ -58,7 +58,7 @@
     </dependencies>
 
     <build>
-        <!-- ESSA LINHA É O QUE RESOLVE TUDO -->
+
         <finalName>ponte-ia</finalName>
 
         <plugins>
@@ -66,7 +66,7 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <configuration>
-                    <mainClass>br.com.fiap.PonteIAApplication</mainClass>  <!-- EXATAMENTE ASSIM -->
+                    <mainClass>br.com.fiap.PonteIAApplication</mainClass>
                 </configuration>
             </plugin>
         </plugins>

@@ -19,13 +19,13 @@ public class PortfolioController {
         this.service = service;
     }
 
-    // RAIZ E HOME - FUNCIONA EM / E /ponteia
+
     @GetMapping({"/", "/ponteia"})
     public String home() {
-        return "home-ponteia";  // Thymeleaf entende como home-ponteia.html
+        return "home-ponteia";
     }
 
-    // FORMULÁRIO DE SUBMISSÃO
+
     @GetMapping("/ponteia/submeter")
     public ModelAndView formulario() {
         ModelAndView mv = new ModelAndView("submeter-portfolio");
@@ -33,24 +33,24 @@ public class PortfolioController {
         return mv;
     }
 
-    // ENVIO DO PORTFÓLIO - CORRIGIDO 100%
+
     @PostMapping("/ponteia/submeter")
     public String salvar(@Valid @ModelAttribute("portfolioDTO") PortfolioDTO dto,
                          BindingResult result,
                          RedirectAttributes attr) {
 
         if (result.hasErrors()) {
-            return "submeter-portfolio"; // volta pro form com erros
+            return "submeter-portfolio";
         }
 
         service.salvar(new Portfolio(dto));
         attr.addFlashAttribute("sucesso",
                 "Portfólio enviado com sucesso! Você será notificado em até 48h sobre o Selo Ponte.IA");
 
-        return "redirect:/ponteia"; // REDIRECIONAMENTO CORRETO (usando String simples)
+        return "redirect:/ponteia";
     }
 
-    // PAINEL ADMINISTRATIVO
+
     @GetMapping("/ponteia/admin")
     public ModelAndView admin() {
         ModelAndView mv = new ModelAndView("admin-listagem");
@@ -58,7 +58,7 @@ public class PortfolioController {
         return mv;
     }
 
-    // EDITAR
+
     @GetMapping("/ponteia/admin/editar/{id}")
     public ModelAndView editar(@PathVariable Long id) {
         ModelAndView mv = new ModelAndView("admin-editar");
@@ -83,7 +83,7 @@ public class PortfolioController {
         return "redirect:/ponteia/admin";
     }
 
-    // DELETAR
+
     @GetMapping("/ponteia/admin/deletar/{id}")
     public String deletar(@PathVariable Long id, RedirectAttributes attr) {
         service.deletar(id);

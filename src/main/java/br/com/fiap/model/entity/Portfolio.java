@@ -19,7 +19,7 @@ public class Portfolio {
     private String telefone;
 
     @Enumerated(EnumType.STRING)
-    private Trilha trilha; // ex: ANALISE_DADOS_JR
+    private Trilha trilha;
 
     private String linkProjeto1;
     private String linkProjeto2;
@@ -33,7 +33,7 @@ public class Portfolio {
     private String feedbackIA;
     private String parecerHumano;
 
-    // Construtores
+
     public Portfolio() {
         this.dataEnvio = LocalDateTime.now();
         this.status = StatusPortfolio.AGUARDANDO_ANALISE;
@@ -50,7 +50,7 @@ public class Portfolio {
         this.descricaoAprendizado = dto.descricaoAprendizado();
     }
 
-    // ===== GETTERS E SETTERS =====
+
 
     public Long getId() {
         return id;
